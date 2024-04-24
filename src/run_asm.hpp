@@ -7,5 +7,4 @@ void run_asm(string ar) {
     system("nasm -f elf64 asm.asm -o asm.o");
     system(ld.c_str());
     system(run.c_str());
-    system("echo $?");
 }

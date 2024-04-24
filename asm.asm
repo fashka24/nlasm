@@ -9,5 +9,5 @@ _start:            ; FUNCTION
    mov rdx, 12
    syscall
    mov rax, 60
-   mov rdi, 22
+   mov rdi, 0
    syscall

@@ -39,12 +39,8 @@ int main(int argc, char ** argv) {
     s;
     string argd = argv[1], argr = argv[2];
     string code = rdfile(argd);
-    cout << termcolor::cyan << code << termcolor::reset << endl;
     vector<Token> tokens = lex(code);
-    for (int i = 0; i < tokens.size(); i++)
-    {
-        cout << tokens[i].type << " < " << tokens[i].value << " >" << endl;
-    }
+
     to_asm(tokens);
     run_asm(argr);
     return 0; // retu 0 // send "Hello world~!!"
