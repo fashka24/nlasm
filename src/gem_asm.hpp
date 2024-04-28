@@ -7,13 +7,33 @@
 #include "tokenize.hpp"
 
 using namespace std;
+string rdfile(string name_file){
+    string output;
+    ifstream file(name_file);
+    {
+        stringstream buf;
+        if (file.is_open())
+        {
+            buf << file.rdbuf();
+        }
+        else {
+            cout << "file not exist or is opened in another process" << endl;
+            exit(1);
+        }
+        file.close();
+        output = buf.str();
+        buf.clear();
+    }
+    return output;
+}
 
-void to_asm(vector<Token> tokens){
-    fstream file2("asm.asm", ios_base::out);
+void to_asm(vector<Token> tokens, string na_s){
+    fstream file2(na_s, ios_base::out);
     file2 << "";
     file2.close();
-    fstream file("asm.asm", ios_base::app);
+    fstream file(na_s, ios_base::app);
     file.clear();
+    int y = 0;
     string main;
     for (int i = 0; i < tokens.size(); i++)
     {
@@ -25,6 +45,19 @@ void to_asm(vector<Token> tokens){
                 file << "global " + tokens[i].value + "            ; main FUNCTION -- " << tokens[i].value << endl;
                 main = tokens[i].value;
             }
+            continue;
+        }
+        if (tokens[i].type == tType::Include)
+        {
+            i++;
+            string o = tokens[i].value;
+            cout << o << endl;
+            string nc_code = rdfile(o);
+            auto toks = lex(nc_code);
+            to_asm(toks, "asm" + to_string(y) + ".asm");
+            string na_code = rdfile("asm" + to_string(y) + ".asm");
+            y++;
+            file << na_code << endl;
             continue;
         }
         if (tokens[i].type == tType::Id)

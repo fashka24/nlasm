@@ -9,6 +9,7 @@ enum tType {
     Main, Id,
     Entr_p, Retu, Out, Goto, Move, Syscall, Add, Sub, RMulv, Mulv, Equals, Cmp, Run, Nr, R, Loop, NLoop, LoopNe,
     Outau,
+    Include, Define, // preprocessor
     Colon, Comma,
     RBrace, LBrace,
 };
@@ -37,9 +38,9 @@ vector<Token> lex(string str){
                 }
             }
         }
-		else if (isalpha(str[i]) || str[i] == '_') {
+		else if (isalpha(str[i]) || str[i] == '_' || str[i] == '#') {
                         string buf;
-                        while (isalnum(str[i]) || str[i] == '.' || str[i] == '_' || str[i] == '/') {
+                        while (isalnum(str[i]) || str[i] == '.' || str[i] == '_' || str[i] == '#') {
                                 buf += str[i];
                                 i++;
                         }
@@ -51,6 +52,14 @@ vector<Token> lex(string str){
                         else if (buf == "retu")
                         {
                             tokens.push_back({tType::Retu, buf});
+                        }
+                        else if (buf == "#include")
+                        {
+                            tokens.push_back({tType::Include, buf});
+                        }
+                        else if (buf == "#define")
+                        {
+                            tokens.push_back({tType::Define, buf});
                         }
                         else if (buf == "run")
                         {
