@@ -36,12 +36,16 @@ string rdfile(string name_file){
 }
 
 int main(int argc, char ** argv) {
-    s;
-    string argd = argv[1], argr = argv[2];
+    string argd = argv[1], argr = argv[2], output_file = argv[3];
     string code = rdfile(argd);
     vector<Token> tokens = lex(code);
 
     to_asm(tokens);
-    run_asm(argr);
+    if (argr == "-R") {
+        run_asm(output_file);
+    }
+    else if (argr == "-B") {
+        build_asm(output_file);
+    }
     return 0; // retu 0 // send "Hello world~!!"
 }

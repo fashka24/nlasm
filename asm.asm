@@ -1,13 +1,22 @@
 global _start            ; main FUNCTION -- _start
-section .data
-message: db "Hello world", 10
 section .text
 _start:            ; FUNCTION
+   call exe
+   mov rdi, 10
+   mov rax, 60
+   syscall
+exe:             ; fun
    mov rax, 1
    mov rdi, 1
-   mov rsi, message
-   mov rdx, 12
+   mov rsi, sys0
+   mov rdx, 3
    syscall
-   mov rax, 60
-   mov rdi, 0
+   mov rax, 1
+   mov rdi, 1
+   mov rsi, sys1
+   mov rdx, 3
    syscall
+   ret
+section .data
+sys0: db "45", 10
+sys1: db "87", 10

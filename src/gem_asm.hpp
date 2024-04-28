@@ -42,7 +42,10 @@ void to_asm(vector<Token> tokens){
                         if (tokens[i].type == tType::Retu) {
                             i++;
                             file << "   mov rax, 60" << endl;
-                            file << "   mov rdi, " + tokens[i].value << endl;
+                            if (tokens[i].type == tType::Number) {
+                                file << "   mov rdi, " + tokens[i].value << endl;
+                            } else if (tokens[i].type == tType::Id && tokens[i].value == "c") {
+                            }
                             file << "   syscall" << endl;
                         }
                         else if (tokens[i].type == tType::Out) {
@@ -57,6 +60,71 @@ void to_asm(vector<Token> tokens){
                             }
                             file << "   syscall" << endl;
                         }
+                        else if (tokens[i].type == tType::Cmp) {
+                            i++;
+                            file << "   cmp "<< tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", " << tokens[i].value << endl;
+                            }
+                        }
+                        else if (tokens[i].type == tType::Equals) {
+                            i++;
+                            file << "   je "<< tokens[i].value << endl;
+                        }
+                        else if (tokens[i].type == tType::Run) {
+                            i++;
+                            file << "   call "<< tokens[i].value << endl;
+                        }
+                        else if (tokens[i].type == tType::Goto) {
+                            i++;
+                            file << "   jmp " << tokens[i].value << endl;
+                        }
+                        else if (tokens[i].type == tType::Add) {
+                            i++;
+                            file << "   add " << tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", ";
+                                file << tokens[i].value << endl;
+                            }
+                        }
+                        else if (tokens[i].type == tType::Sub) {
+                            i++;
+                            file << "   sub " << tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", ";
+                                file << tokens[i].value << endl;
+                            }
+                        }
+                        else if (tokens[i].type == tType::Move) {
+                            i++;
+                            file << "   mov " << tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                file << ", ";
+                                i++;
+                                if (tokens[i].type == tType::Id || tokens[i].type == tType::Number) {
+                                    file << tokens[i].value << endl;
+                                }
+                                else {
+                                    cout << "not close comma tag" << endl;
+                                    exit(1);
+                                }
+                            }
+                            else {
+                                i--;
+                                cout << "not implemented tag << " << tokens[i].value << endl;
+                                exit(1);
+                            }
+                        }
+                        else if (tokens[i].type == tType::Syscall) {
+                            file << "   syscall"<<endl;
+                        }
                         i++;
                     }
 
@@ -70,15 +138,122 @@ void to_asm(vector<Token> tokens){
                     while (tokens[i].type != tType::LBrace) {
                         file << tokens[i].value << ": " << "db ";
                         i++;
-                        file << "\"" << tokens[i].value << "\"";
-                        i++;
-                        if (tokens[i].type == tType::Comma) {
+                        if (tokens[i].type == tType::String) {
+                            file << "\"" << tokens[i].value << "\"";
                             i++;
-                            file << ", " << tokens[i].value << endl;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", " << tokens[i].value << endl;i++;
+                            } else {
+                                file << endl;
+                            }
+                        }
+                        else if (tokens[i].type == tType::Number) {
+                            file << tokens[i].value << endl;
+                            i++;
+                        }
+                    }
+
+                }
+            }
+            else {
+                file << tokens[i].value;
+                i++;
+                if (tokens[i].type == tType::RBrace) {
+                    file << ":             ; fun" << endl;
+                    i++;
+                    while (tokens[i].type != tType::LBrace) {
+                        if (tokens[i].type == tType::Retu) {
+                            i++;
+                            file << "   mov rax, 60" << endl;
+                            if (tokens[i].type == tType::Number) {
+                                file << "   mov rdi, " + tokens[i].value << endl;
+                            } else if (tokens[i].type == tType::Id && tokens[i].value == "c") {
+                            }
+                            file << "   syscall" << endl;
+                        }
+                        else if (tokens[i].type == tType::Out) {
+                            i++;
+                            file << "   mov rax, 1" << endl;
+                            file << "   mov rdi, 1" << endl;
+                            file << "   mov rsi, " << tokens[i].value << endl;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << "   mov rdx, " << tokens[i].value << endl;
+                            }
+                            file << "   syscall" << endl;
+                        }
+                        else if (tokens[i].type == tType::Cmp) {
+                            i++;
+                            file << "   cmp "<< tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", " << tokens[i].value << endl;
+                            }
+                        }
+                        else if (tokens[i].type == tType::Equals) {
+                            i++;
+                            file << "   je "<< tokens[i].value << endl;
+                        }
+                        else if (tokens[i].type == tType::Goto) {
+                            i++;
+                            file << "   jmp " << tokens[i].value << endl;
+                        }
+                        else if (tokens[i].type == tType::Add) {
+                            i++;
+                            file << "   add " << tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", ";
+                                file << tokens[i].value << endl;
+                            }
+                        }
+                        else if (tokens[i].type == tType::Sub) {
+                            i++;
+                            file << "   sub " << tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", ";
+                                file << tokens[i].value << endl;
+                            }
+                        }
+                        else if (tokens[i].type == tType::Move) {
+                            i++;
+                            file << "   mov " << tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                file << ", ";
+                                i++;
+                                if (tokens[i].type == tType::Id || tokens[i].type == tType::Number) {
+                                    file << tokens[i].value << endl;
+                                }
+                                else {
+                                    cout << "not close comma tag" << endl;
+                                    exit(1);
+                                }
+                            }
+                            else {
+                                i--;
+                                cout << "not implemented tag << " << tokens[i].value << endl;
+                                exit(1);
+                            }
+                        }
+                        else if (tokens[i].type == tType::Syscall) {
+                            file << "   syscall"<<endl;
                         }
                         i++;
                     }
-
+                    if (i + 1 != tokens.size()) {
+                        i++;
+                        if (tokens[i].type != tType::Nr && tokens[i].value != "nr") {
+                            file << "   ret" << endl;
+                        }
+                        i--;
+                    }
                 }
             }
             

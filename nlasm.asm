@@ -1,9 +1,14 @@
 entr_p _start
-
-variables {
-    message "Hello world", 10
-}
 _start {
-    out message, 12 ; send message
-    retu 0
+   run exe
+   move rdi, 10
+   retu c
+}
+exe {
+    out sys0, 3
+    out sys1, 3
+} nr
+variables {
+sys0 "45", 10
+sys1 "87", 10
 }

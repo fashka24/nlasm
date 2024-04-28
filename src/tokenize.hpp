@@ -7,7 +7,7 @@ using namespace std;
 enum tType {
     Number, String,
     Main, Id,
-    Entr_p, Retu, Out,
+    Entr_p, Retu, Out, Goto, Move, Syscall, Add, Sub, Equals, Cmp, Run, Nr,
     Colon, Comma,
     RBrace, LBrace,
 };
@@ -50,6 +50,42 @@ vector<Token> lex(string str){
                         else if (buf == "retu")
                         {
                             tokens.push_back({tType::Retu, buf});
+                        }
+                        else if (buf == "run")
+                        {
+                            tokens.push_back({tType::Run, buf});
+                        }
+                        else if (buf == "nr")
+                        {
+                            tokens.push_back({tType::Nr, buf});
+                        }
+                        else if (buf == "goto")
+                        {
+                            tokens.push_back({tType::Goto, buf});
+                        }
+                        else if (buf == "move")
+                        {
+                            tokens.push_back({tType::Move, buf});
+                        }
+                        else if (buf == "syscall")
+                        {
+                            tokens.push_back({tType::Syscall, buf});
+                        }
+                        else if (buf == "add")
+                        {
+                            tokens.push_back({tType::Add, buf});
+                        }
+                        else if (buf == "min")
+                        {
+                            tokens.push_back({tType::Sub, buf});
+                        }
+                        else if (buf == "cmp")
+                        {
+                            tokens.push_back({tType::Cmp, buf});
+                        }
+                        else if (buf == "equals")
+                        {
+                            tokens.push_back({tType::Equals, buf});
                         }
                         else if (buf == "out")
                         {
