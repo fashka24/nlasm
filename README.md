@@ -4,7 +4,7 @@
 
 - Have gooder output and syntax
 
-## nlasm.asm :
+## example/hello.asm :
     entr_p _start
 
     variables {
@@ -15,6 +15,6 @@
         retu 0
     }
 ## ouput :
-    ┌──(fashka24㉿kali)-[nlasm]
-    └─$ ./nlasm nlasm.asm nlasml
+    ┌──(fashka24㉿kali)-[/example]
+    └─$ ./nlasm hello.asm -R hello
         Hello world
