@@ -60,6 +60,13 @@ void to_asm(vector<Token> tokens, string na_s){
             file << na_code << endl;
             continue;
         }
+        if (tokens[i].type == tType::Nasm) {
+            i++;
+            if (tokens[i].type == tType::EqualsLiteral) {
+                i++;
+                file << tokens[i].value << endl;
+            }
+        }
         if (tokens[i].type == tType::Id)
         {
 
@@ -80,6 +87,13 @@ void to_asm(vector<Token> tokens, string na_s){
                             } else if (tokens[i].type == tType::Id && tokens[i].value == "c") {
                             }
                             file << "   syscall" << endl;
+                        }
+                        else if (tokens[i].type == tType::Nasm) {
+                            i++;
+                            if (tokens[i].type == tType::EqualsLiteral) {
+                                i++;
+                                file << tokens[i].value << endl;
+                            }
                         }
                         else if (tokens[i].type == tType::Out) {
                             i++;
@@ -242,6 +256,13 @@ void to_asm(vector<Token> tokens, string na_s){
                             } else if (tokens[i].type == tType::Id && tokens[i].value == "c") {
                             }
                             file << "   syscall" << endl;
+                        }
+                        else if (tokens[i].type == tType::Nasm) {
+                            i++;
+                            if (tokens[i].type == tType::EqualsLiteral) {
+                                i++;
+                                file << tokens[i].value << endl;
+                            }
                         }
                         else if (tokens[i].type == tType::Out) {
                             i++;

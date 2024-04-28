@@ -9,7 +9,7 @@ exitc:             ; fun
    syscall
    ret
 
-section .text
-_start:            ; FUNCTION
-   mov rdi, 22
-   call exitc
+_start:
+    mov rax, 60
+    mov rdi, 0
+    syscall

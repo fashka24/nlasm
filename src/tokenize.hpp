@@ -10,7 +10,8 @@ enum tType {
     Entr_p, Retu, Out, Goto, Move, Syscall, Add, Sub, RMulv, Mulv, Equals, Cmp, Run, Nr, R, Loop, NLoop, LoopNe,
     Outau,
     Include, Define, // preprocessor
-    Colon, Comma,
+    Nasm, // all nasm instructions 
+    Colon, Comma, EqualsLiteral,
     RBrace, LBrace,
 };
 
@@ -52,6 +53,10 @@ vector<Token> lex(string str){
                         else if (buf == "retu")
                         {
                             tokens.push_back({tType::Retu, buf});
+                        }
+                        else if (buf == "nasm")
+                        {
+                            tokens.push_back({tType::Nasm, buf});
                         }
                         else if (buf == "#include")
                         {
@@ -162,6 +167,9 @@ vector<Token> lex(string str){
                      tokens.push_back({tType::Comma, "<-"});
                 }
                }
+        else if (str[i] == '=') {
+            tokens.push_back({tType::EqualsLiteral, "="});
+                }
 		else if (str[i] == '"') {
                         string buf;
 				i++;
