@@ -7,7 +7,8 @@ using namespace std;
 enum tType {
     Number, String,
     Main, Id,
-    Entr_p, Retu, Out, Goto, Move, Syscall, Add, Sub, Equals, Cmp, Run, Nr,
+    Entr_p, Retu, Out, Goto, Move, Syscall, Add, Sub, RMulv, Mulv, Equals, Cmp, Run, Nr, R, Loop, NLoop, LoopNe,
+    Outau,
     Colon, Comma,
     RBrace, LBrace,
 };
@@ -59,6 +60,30 @@ vector<Token> lex(string str){
                         {
                             tokens.push_back({tType::Nr, buf});
                         }
+                        else if (buf == "mulv")
+                        {
+                            tokens.push_back({tType::Mulv, buf});
+                        }
+                        else if (buf == "rmulv")
+                        {
+                            tokens.push_back({tType::RMulv, buf});
+                        }
+                        else if (buf == "loop")
+                        {
+                            tokens.push_back({tType::Loop, buf});
+                        }
+                        else if (buf == "nloop")
+                        {
+                            tokens.push_back({tType::NLoop, buf});
+                        }
+                        else if (buf == "loopne")
+                        {
+                            tokens.push_back({tType::LoopNe, buf});
+                        }
+                        else if (buf == "r")
+                        {
+                            tokens.push_back({tType::R, buf});
+                        }
                         else if (buf == "goto")
                         {
                             tokens.push_back({tType::Goto, buf});
@@ -91,6 +116,10 @@ vector<Token> lex(string str){
                         {
                             tokens.push_back({tType::Out, buf});
                         }
+                        else if (buf == "outau") // auto length and auto add var
+                        {
+                            tokens.push_back({tType::Outau, buf});
+                        }
                         else
                         {
                         tokens.push_back({tType::Id, buf});
@@ -118,6 +147,12 @@ vector<Token> lex(string str){
         else if (str[i] == ',') {
             tokens.push_back({tType::Comma, ","});
                 }
+        else if (str[i] == '<') {
+            i++;
+               if (str[i] == '-') {
+                     tokens.push_back({tType::Comma, "<-"});
+                }
+               }
 		else if (str[i] == '"') {
                         string buf;
 				i++;

@@ -81,6 +81,10 @@ void to_asm(vector<Token> tokens){
                             i++;
                             file << "   jmp " << tokens[i].value << endl;
                         }
+                        else if (tokens[i].type == tType::RMulv) {
+                            i++;
+                            file << "   mul " << tokens[i].value << endl;
+                        }
                         else if (tokens[i].type == tType::Add) {
                             i++;
                             file << "   add " << tokens[i].value;
@@ -99,6 +103,30 @@ void to_asm(vector<Token> tokens){
                                 i++;
                                 file << ", ";
                                 file << tokens[i].value << endl;
+                            }
+                        }
+                        else if (tokens[i].type == tType::Mulv) {
+                            i++;
+                            file << "   imul " << tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", ";
+                                file << tokens[i].value;
+                                i++;
+                                if (tokens[i].type == tType::Comma) {
+                                    i++;
+                                    file << ", ";
+                                    file << tokens[i].value << endl;
+                                }
+                                else {
+                                    file << endl;
+                                    i--;
+                                }
+                            }
+                            else {
+                                cout << termcolor::bright_red << "Error" << termcolor::reset << ": not used mulv instruction." << endl;
+                                errors++;
                             }
                         }
                         else if (tokens[i].type == tType::Move) {
@@ -124,6 +152,16 @@ void to_asm(vector<Token> tokens){
                         }
                         else if (tokens[i].type == tType::Syscall) {
                             file << "   syscall"<<endl;
+                        }
+                        else if (tokens[i].type == tType::Loop) {
+                            i++;
+                            file << "   loop ";
+                            file << tokens[i].value << endl;
+                        }
+                        else if (tokens[i].type == tType::NLoop) {
+                            i++;
+                            file << "   jrcxz ";
+                            file << tokens[i].value << endl;
                         }
                         i++;
                     }
@@ -201,6 +239,10 @@ void to_asm(vector<Token> tokens){
                             i++;
                             file << "   jmp " << tokens[i].value << endl;
                         }
+                        else if (tokens[i].type == tType::RMulv) {
+                            i++;
+                            file << "   mul " << tokens[i].value << endl;
+                        }
                         else if (tokens[i].type == tType::Add) {
                             i++;
                             file << "   add " << tokens[i].value;
@@ -219,6 +261,30 @@ void to_asm(vector<Token> tokens){
                                 i++;
                                 file << ", ";
                                 file << tokens[i].value << endl;
+                            }
+                        }
+                        else if (tokens[i].type == tType::Mulv) {
+                            i++;
+                            file << "   imul " << tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", ";
+                                file << tokens[i].value;
+                                i++;
+                                if (tokens[i].type == tType::Comma) {
+                                    i++;
+                                    file << ", ";
+                                    file << tokens[i].value << endl;
+                                }
+                                else {
+                                    file << endl;
+                                    i--;
+                                }
+                            }
+                            else {
+                                cout << termcolor::bright_red << "Error" << termcolor::reset << ": not used mulv instruction." << endl;
+                                errors++;
                             }
                         }
                         else if (tokens[i].type == tType::Move) {
@@ -245,12 +311,26 @@ void to_asm(vector<Token> tokens){
                         else if (tokens[i].type == tType::Syscall) {
                             file << "   syscall"<<endl;
                         }
+                        else if (tokens[i].type == tType::Loop) {
+                            i++;
+                            file << "   loop ";
+                            file << tokens[i].value << endl;
+                        }
+                        else if (tokens[i].type == tType::NLoop) {
+                            i++;
+                            file << "   jrcxz ";
+                            file << tokens[i].value << endl;
+                        }
                         i++;
                     }
                     if (i + 1 != tokens.size()) {
                         i++;
-                        if (tokens[i].type != tType::Nr && tokens[i].value != "nr") {
+                        if ((tokens[i].type != tType::Nr && tokens[i].value != "nr") || (tokens[i].type == tType::R && tokens[i].value == "r")) {
                             file << "   ret" << endl;
+                        }
+                        else {
+                            cout << termcolor::bright_yellow << "Warning" << termcolor::reset << ": not return to main function." << endl;
+                            warnings++;
                         }
                         i--;
                     }
