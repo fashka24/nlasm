@@ -1,6 +1,7 @@
 #include <iostream> 
 #include <fstream>
 #include <sstream>
+#include <ctime>
 
 using namespace std;
 
@@ -41,6 +42,8 @@ int main(int argc, char ** argv) {
     vector<Token> tokens = lex(code);
 
     to_asm(tokens);
+    unsigned int start_time =  clock(); // начальное время
+    // здесь должен быть фрагмент кода, время выполнения которого нужно измерить
     if (argr == "-R") {
         run_asm(output_file);
     }
@@ -49,8 +52,9 @@ int main(int argc, char ** argv) {
     }
     time_t t1 = time(NULL);
     tm t = *localtime(&t1);
-
+    unsigned int end_time = clock(); // конечное время
+    unsigned int search_time = end_time - start_time;
     cout << "Compilation " << termcolor::bright_green << "finished" << termcolor::reset << " at ";
-    printf("%d.%d %.2d:%.2d:%.2d\n",t.tm_mon, t.tm_mday ,t.tm_hour, t.tm_min, t.tm_sec);
+    printf("%d.%d %.2d:%.2d:%.2d in %d milliseconds\n",t.tm_mon, t.tm_mday ,t.tm_hour, t.tm_min, t.tm_sec, search_time );
     return 0; // retu 0 // send "Hello world~!!"
 }
