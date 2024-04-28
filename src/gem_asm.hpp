@@ -51,7 +51,7 @@ void to_asm(vector<Token> tokens, string na_s){
         {
             i++;
             string o = tokens[i].value;
-            cout << o << endl;
+            cout << termcolor::bright_cyan << "Include" << termcolor::reset << ": " << o << endl;
             string nc_code = rdfile(o);
             auto toks = lex(nc_code);
             to_asm(toks, "asm" + to_string(y) + ".asm");
@@ -124,10 +124,67 @@ void to_asm(vector<Token> tokens, string na_s){
                             i++;
                             file << "   call "<< tokens[i].value << endl;
                         }
+                        else if (tokens[i].type == tType::Push) {
+                            i++;
+                            file << "   push "<< tokens[i].value << endl;
+                        }
+                        else if (tokens[i].type == tType::Pop) {
+                            i++;
+                            file << "   pop "<< tokens[i].value << endl;
+                        }
                         else if (tokens[i].type == tType::Goto) {
                             i++;
                             file << "   jmp " << tokens[i].value << endl;
                         }
+
+                        else if (tokens[i].type == tType::Or) {
+                            i++;
+                            file << "   or "<< tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", " << tokens[i].value << endl;
+                            }
+                            else {
+                                cout  << termcolor::bright_red << "Error" << termcolor::reset << ": didn't have any comma or spcomma(<-)\n";
+                                errors++;
+                            }
+                        }
+                        else if (tokens[i].type == tType::Xor) {
+                            i++;
+                            file << "   xor "<< tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", " << tokens[i].value << endl;
+                            }
+                            else {
+                                cout  << termcolor::bright_red << "Error" << termcolor::reset << ": didn't have any comma or spcomma(<-)\n";
+                                errors++;
+                            }
+                        }
+                        else if (tokens[i].type == tType::And) {
+                            i++;
+                            file << "   and "<< tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", " << tokens[i].value << endl;
+                            }
+                            else {
+                                cout  << termcolor::bright_red << "Error" << termcolor::reset << ": didn't have any comma or spcomma(<-)\n";
+                                errors++;
+                            }
+                        }
+                        else if (tokens[i].type == tType::Negat) {
+                            i++;
+                            file << "   neg "<< tokens[i].value << endl;
+                        }
+                        else if (tokens[i].type == tType::Not) {
+                            i++;
+                            file << "   not "<< tokens[i].value << endl;
+                        }
+
                         else if (tokens[i].type == tType::RMulv) {
                             i++;
                             file << "   mul " << tokens[i].value << endl;
@@ -140,6 +197,19 @@ void to_asm(vector<Token> tokens, string na_s){
                                 i++;
                                 file << ", ";
                                 file << tokens[i].value << endl;
+                            }
+                            else {
+                                cout << termcolor::bright_red << "Error" << termcolor::reset << ": Didn't have second operand\n";
+                                errors++;
+                            }
+                        }
+                        else if (tokens[i].type == tType::Copy) {
+                            i++;
+                            file << "   movzx "<< tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", " << tokens[i].value << endl;
                             }
                         }
                         else if (tokens[i].type == tType::Sub) {
@@ -221,9 +291,10 @@ void to_asm(vector<Token> tokens, string na_s){
                 if (tokens[i].type == tType::RBrace) {
                     i++;
                     while (tokens[i].type != tType::LBrace) {
-                        file << tokens[i].value << ": " << "db ";
+                        file << tokens[i].value << ": ";
                         i++;
                         if (tokens[i].type == tType::String) {
+                            file << "db ";
                             file << "\"" << tokens[i].value << "\"";
                             i++;
                             if (tokens[i].type == tType::Comma) {
@@ -234,6 +305,7 @@ void to_asm(vector<Token> tokens, string na_s){
                             }
                         }
                         else if (tokens[i].type == tType::Number) {
+                            file << "dq ";
                             file << tokens[i].value << endl;
                             i++;
                         }
@@ -297,6 +369,23 @@ void to_asm(vector<Token> tokens, string na_s){
                             i++;
                             file << "   mul " << tokens[i].value << endl;
                         }
+                        else if (tokens[i].type == tType::Push) {
+                            i++;
+                            file << "   push "<< tokens[i].value << endl;
+                        }
+                        else if (tokens[i].type == tType::Pop) {
+                            i++;
+                            file << "   pop "<< tokens[i].value << endl;
+                        }
+                        else if (tokens[i].type == tType::Copy) {
+                            i++;
+                            file << "   movzx "<< tokens[i].value;
+                            i++;
+                            if (tokens[i].type == tType::Comma) {
+                                i++;
+                                file << ", " << tokens[i].value << endl;
+                            }
+                        }
                         else if (tokens[i].type == tType::Add) {
                             i++;
                             file << "   add " << tokens[i].value;
@@ -305,6 +394,10 @@ void to_asm(vector<Token> tokens, string na_s){
                                 i++;
                                 file << ", ";
                                 file << tokens[i].value << endl;
+                            }
+                            else {
+                                cout << termcolor::bright_red << "Error" << termcolor::reset << ": Didn't have second operand\n";
+                                errors++;
                             }
                         }
                         else if (tokens[i].type == tType::Sub) {

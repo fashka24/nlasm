@@ -8,7 +8,7 @@ enum tType {
     Number, String,
     Main, Id,
     Entr_p, Retu, Out, Goto, Move, Syscall, Add, Sub, RMulv, Mulv, Equals, Cmp, Run, Nr, R, Loop, NLoop, LoopNe,
-    Outau,
+    Outau, Pop, Push, Copy, Not, Negat, Or, Xor, And,
     Include, Define, // preprocessor
     Nasm, // all nasm instructions 
     Colon, Comma, EqualsLiteral,
@@ -39,9 +39,9 @@ vector<Token> lex(string str){
                 }
             }
         }
-		else if (isalpha(str[i]) || str[i] == '_' || str[i] == '#') {
+		else if (isalpha(str[i]) || str[i] == '_' || str[i] == '#' || str[i] == '[') {
                         string buf;
-                        while (isalnum(str[i]) || str[i] == '.' || str[i] == '_' || str[i] == '#') {
+                        while (isalnum(str[i]) || str[i] == '.' || str[i] == '_' || str[i] == '#' || str[i] == ']' || str[i] == '[') {
                                 buf += str[i];
                                 i++;
                         }
@@ -57,6 +57,38 @@ vector<Token> lex(string str){
                         else if (buf == "nasm")
                         {
                             tokens.push_back({tType::Nasm, buf});
+                        }
+                        else if (buf == "copy")
+                        {
+                            tokens.push_back({tType::Copy, buf});
+                        }
+                        else if (buf == "push")
+                        {
+                            tokens.push_back({tType::Push, buf});
+                        }
+                        else if (buf == "pop")
+                        {
+                            tokens.push_back({tType::Pop, buf});
+                        }
+                        else if (buf == "or")
+                        {
+                            tokens.push_back({tType::Or, buf});
+                        }
+                        else if (buf == "xor")
+                        {
+                            tokens.push_back({tType::Xor, buf});
+                        }
+                        else if (buf == "and")
+                        {
+                            tokens.push_back({tType::And, buf});
+                        }
+                        else if (buf == "not")
+                        {
+                            tokens.push_back({tType::Not, buf});
+                        }
+                        else if (buf == "negat")
+                        {
+                            tokens.push_back({tType::Negat, buf});
                         }
                         else if (buf == "#include")
                         {

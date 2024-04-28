@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
+#include <unistd.h>
 
 using namespace std;
 
@@ -33,6 +34,7 @@ int main(int argc, char ** argv) {
 
     unsigned int start_time =  clock(); // начальное время
     // здесь должен быть фрагмент кода, время выполнения которого нужно измерить
+//    sleep(2);
     build_asm(output_file);
     unsigned int end_time = clock(); // конечное время
     time_t t1 = time(NULL);
