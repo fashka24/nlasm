@@ -47,5 +47,10 @@ int main(int argc, char ** argv) {
     else if (argr == "-B") {
         build_asm(output_file);
     }
+    time_t t1 = time(NULL);
+    tm t = *localtime(&t1);
+
+    cout << "Compilation " << termcolor::bright_green << "finished" << termcolor::reset << " at ";
+    printf("%d.%d %.2d:%.2d:%.2d\n",t.tm_mon, t.tm_mday ,t.tm_hour, t.tm_min, t.tm_sec);
     return 0; // retu 0 // send "Hello world~!!"
 }
