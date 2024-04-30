@@ -1,6 +1,4 @@
 global _start            ; main FUNCTION -- _start
-section .data
-message: db "Hello world", 10
 section .text
 _start:            ; FUNCTION
    mov rax, 1
@@ -11,3 +9,6 @@ _start:            ; FUNCTION
    mov rax, 60
    mov rdi, 0
    syscall
+section .data
+message: db "Hello world"
+

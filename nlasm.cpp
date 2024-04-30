@@ -36,8 +36,15 @@ int main(int argc, char ** argv) {
     unsigned int start_time =  clock(); // начальное время
     // здесь должен быть фрагмент кода, время выполнения которого нужно измерить
 //    sleep(2);
-    build_asm(output_file);
-    unsigned int end_time = clock(); // конечное время
+    if (argr == "-BD") {
+        build_asm_with_del(output_file);
+    }
+    else if (argr == "-BDa") {
+        build_asm_with_delX(output_file);
+    }
+    else {
+        build_asm(output_file);
+    }unsigned int end_time = clock(); // конечное время
     time_t t1 = time(NULL);
     tm t = *localtime(&t1);
     unsigned int search_time = end_time - start_time;
@@ -47,7 +54,7 @@ int main(int argc, char ** argv) {
     if (argr == "-R") {
         run_asm(output_file);
     }
-    else if (argr == "-B") {
+    else if (argr == "-B" || argr == "-BD" || argr == "-BDa") {
         cout << "Build " << termcolor::bright_green << "finished" << termcolor::reset << ".\n";
     }
     return 0; // retu 0 // send "Hello world~!!"
