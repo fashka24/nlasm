@@ -7,6 +7,18 @@
 #include "tokenize.hpp"
 
 using namespace std;
+
+void use_gcc(string message) {
+    cout << termcolor::bright_green << "Use" << termcolor::reset
+         << " "
+         << termcolor::bright_cyan << "GCC" << termcolor::reset
+         << " for " << message << "\n";
+}
+
+struct variable {
+    string name, value;
+};
+
 string rdfile(string name_file){
     string output;
     ifstream file(name_file);
@@ -35,6 +47,7 @@ void to_asm(vector<Token> tokens, string na_s) {
     file.clear();
     int y = 0;
     string main;
+    vector<variable> vars;
     for (int i = 0; i < tokens.size(); i++) {
         if (tokens[i].type == tType::Entr_p) {
             i++;
@@ -63,6 +76,29 @@ void to_asm(vector<Token> tokens, string na_s) {
                 file << tokens[i].value << endl;
             }
         }
+        if (tokens[i].type == tType::Exip) {
+            i++;
+            if (tokens[i].type == tType::Id) {
+                use_gcc(tokens[i].value);
+                file << "extern " << tokens[i].value << endl;
+                gcc = true;
+            }
+            else if (tokens[i].type == tType::String) {
+                cout << termcolor::bright_yellow << "Warning" << termcolor::reset
+                    << ": In tge eip statement was used string. Use the id, example : exip printf\n";
+                warnings++;
+                use_gcc(tokens[i].value);
+                file << "extern " << tokens[i].value << endl;
+                gcc = true;
+            }
+            else {
+                cout << termcolor::bright_red << "Error" << termcolor::reset
+                     << ": Empty or not true type for exip statement\n";
+                errors++;
+            }
+            i++;
+
+        }
         if (tokens[i].type == tType::Id) {
 
             if (main == tokens[i].value) {
@@ -81,7 +117,58 @@ void to_asm(vector<Token> tokens, string na_s) {
                             } else if (tokens[i].type == tType::Id && tokens[i].value == "c") {
                             }
                             file << "   syscall" << endl;
-                        } else if (tokens[i].type == tType::Nasm) {
+                        }
+                        else if (tokens[i].type == tType::Var) {
+                            i++;
+                            if (tokens[i].type == tType::Id) {
+                                string bud = tokens[i].value;
+                                string bu_val = "";
+                                bu_val += ": " ;
+                                i++;
+                                if (tokens[i].type == tType::ColonEquals) {
+                                    i++;
+                                    if (tokens[i].type == tType::String) {
+                                        bu_val += "db ";
+                                        bu_val +=  "\"" + tokens[i].value + "\"";
+                                        i++;
+                                        if (tokens[i].type == tType::Comma) {
+                                            i++;
+                                            while (tokens[i].type != tType::Wave) {
+                                                bu_val +=  ", " + tokens[i].value;
+                                                i++;
+                                                if (tokens[i].type != tType::Wave) {
+                                                }
+                                            }
+
+                                            bu_val += "\n";
+
+                                        } else {
+                                            i--;
+                                            bu_val += "\n";
+                                        }
+                                    } else if (tokens[i].type == tType::Number) {
+                                        bu_val += "dq ";
+                                        bu_val +=  tokens[i].value;
+                                        i++;
+                                        if (tokens[i].type == tType::Comma) {
+                                            i++;
+                                            while (tokens[i].type != tType::Wave) {
+                                                bu_val += ", " + tokens[i].value;
+                                                i++;
+                                                if (tokens[i].type != tType::Wave) {
+                                                    i++;
+                                                }
+                                            }
+                                            bu_val +=  "\n";
+                                            i++;
+                                        } else {
+                                            bu_val += "\n";
+                                        }
+                                    }
+                                }
+                                vars.push_back({bud, bu_val});
+                            }
+                        }else if (tokens[i].type == tType::Nasm) {
                             i++;
                             if (tokens[i].type == tType::EqualsLiteral) {
                                 i++;
@@ -394,6 +481,56 @@ void to_asm(vector<Token> tokens, string na_s) {
                                 file << "   mov rdx, " << tokens[i].value << endl;
                             }
                             file << "   syscall" << endl;
+                        }else if (tokens[i].type == tType::Var) {
+                            i++;
+                            if (tokens[i].type == tType::Id) {
+                                string bud = tokens[i].value;
+                                string bu_val = "";
+                                i++;
+                                if (tokens[i].type == tType::ColonEquals) {
+                                    i++;
+                                    bu_val += tokens[i].value + ": ";
+                                    i++;
+                                    if (tokens[i].type == tType::String) {
+                                        bu_val += "db ";
+                                        bu_val +=  "\"" + tokens[i].value + "\"";
+                                        i++;
+                                        if (tokens[i].type == tType::Comma) {
+                                            i++;
+                                            while (tokens[i].type != tType::Wave) {
+                                                bu_val +=  ", " + tokens[i].value;
+                                                i++;
+                                                if (tokens[i].type != tType::Wave) {
+                                                    i++;
+                                                }
+                                            }
+                                            bu_val += "\n";
+                                            i++;
+                                        } else {
+                                            bu_val += "\n";
+                                        }
+                                    } else if (tokens[i].type == tType::Number) {
+                                        bu_val += "dq ";
+                                        bu_val +=  tokens[i].value;
+                                        i++;
+                                        if (tokens[i].type == tType::Comma) {
+                                            i++;
+                                            while (tokens[i].type != tType::Wave) {
+                                                bu_val += ", " + tokens[i].value;
+                                                i++;
+                                                if (tokens[i].type != tType::Wave) {
+                                                    i++;
+                                                }
+                                            }
+                                            bu_val +=  "\n";
+                                            i++;
+                                        } else {
+                                            bu_val += "\n";
+                                        }
+                                    }
+                                }
+                                vars.push_back({bud, bu_val});
+                            }
                         } else if (tokens[i].type == tType::Cvtsd2si) {
                             i++;
                             file << "   cvtsd2si " << tokens[i].value;
@@ -621,5 +758,10 @@ void to_asm(vector<Token> tokens, string na_s) {
                 }
 
             }
+        file << "section .text\n";
+        for (int i = 0; i < vars.size(); ++i) {
+            file << vars[i].name << vars[i].value << endl;
+        }
+        file.close();
         }
 

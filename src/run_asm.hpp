@@ -7,7 +7,13 @@ void run_asm(string ar) {
 }
 void build_asm(string ar) {
     string ld = "ld -o " + ar + " asm.o", run = "./"+ar;
+    string gcc_s = "gcc asm.o -static -o " + ar;
     system("nasm -f elf64 asm.asm -o asm.o");
-    system(ld.c_str());
-//    system(run.c_str());
+    if (!gcc) {
+        system(ld.c_str()); // default ld
+    }
+    else {
+        system(gcc_s.c_str()); // gcc ld
+    }
+    //    system(run.c_str());
 }

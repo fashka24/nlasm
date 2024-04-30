@@ -6,6 +6,7 @@
 
 using namespace std;
 
+bool gcc = false;
 int warnings = 0;
 int errors = 0;
 

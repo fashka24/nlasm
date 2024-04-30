@@ -8,10 +8,10 @@ enum tType {
     Number, String,
     Main, Id,
     Entr_p, Retu, Out, Goto, Move, Syscall, Add, Sub, RMulv, Mulv, Equals, Cmp, Run, Nr, R, Loop, NLoop, LoopNe,
-    Outau, Pop, Push, Copy, Not, Negat, Or, Xor, And, Step, Left, Right, Moveq, Cvtsd2si,
+    Outau, Pop, Push, Copy, Not, Negat, Or, Xor, And, Step, Left, Right, Moveq, Cvtsd2si, Exip, Var,
     Include, Define, // preprocessor
     Nasm, // all nasm instructions 
-    Colon, Comma, EqualsLiteral, Wave,
+    Colon, Comma, EqualsLiteral, Wave, ColonEquals,
     RBrace, LBrace,
 };
 
@@ -25,9 +25,9 @@ vector<Token> lex(string str){
 	vector<Token> tokens;
 	string out;
 	for (int i = 0; i < str.length(); ++i) {
-        if (str[i] == ' ') {
-            continue;
-        }
+//        if (str[i] == ' ') {
+//            continue;
+//        }
         if (str[i] == ';') {
             while (str[i] != '\n') {
                 i++;
@@ -57,6 +57,10 @@ vector<Token> lex(string str){
                         {
                             tokens.push_back({tType::Retu, buf});
                         }
+                        else if (buf == "var")
+                        {
+                            tokens.push_back({tType::Var, buf});
+                        }
                         else if (buf == "nasm")
                         {
                             tokens.push_back({tType::Nasm, buf});
@@ -76,6 +80,10 @@ vector<Token> lex(string str){
                         else if (buf == "copy")
                         {
                             tokens.push_back({tType::Copy, buf});
+                        }
+                        else if (buf == "exip")
+                        {
+                            tokens.push_back({tType::Exip, buf});
                         }
                         else if (buf == "push")
                         {
@@ -216,7 +224,14 @@ vector<Token> lex(string str){
                         tokens.push_back({tType::RBrace, "{"});
                 }
         else if (str[i] == ':') {
-            tokens.push_back({tType::Colon, ":"});
+            i++;
+            if (str[i] == '=') {
+                tokens.push_back({tType::ColonEquals, ":="});
+            }
+            else {
+                i--;
+                tokens.push_back({tType::Colon, ":"});
+            }
                 }
         else if (str[i] == ',') {
             tokens.push_back({tType::Comma, ","});
