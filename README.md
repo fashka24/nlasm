@@ -30,9 +30,24 @@
             output:
                 Compilation finished at 3.28 13:40:08 in 244 milliseconds
                 Hello world (and files: asm.asm, asm.o, hello(executebale))
+
     -B << build program
         example:
             ./nlasm hello.asm -B hello
             output:
                 Compilation finished at 3.28 13:40:08 in 244 milliseconds
                 "files: asm.asm, asm.o, hello(executebale)"
+
+    -BD << build program and delete file asm.o (build with delete)
+        example:
+            ./nlasm hello.asm -BD hello
+            output:
+                Compilation finished at 3.28 13:40:08 in 244 milliseconds
+                "files: asm.asm, hello(executebale)"
+
+    -BDa << build program and delete files asm.o, asm.asm (build with delete all) 
+        example:
+            ./nlasm hello.asm -BDa hello
+            output:
+                Compilation finished at 3.28 13:40:08 in 244 milliseconds
+                "files: hello(executebale)"
