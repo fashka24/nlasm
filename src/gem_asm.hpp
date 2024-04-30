@@ -65,21 +65,23 @@ void to_asm(vector<Token> tokens, string na_s) {
             to_asm(toks, "asm" + to_string(y) + ".asm");
             string na_code = rdfile("asm" + to_string(y) + ".asm");
             y++;
+            file << ";      Code Include file {\n";
             file << na_code << endl;
+            file << ";     } End Include File Code\n";
             continue;
         }
         if (tokens[i].type == tType::Nasm) {
             i++;
             if (tokens[i].type == tType::EqualsLiteral) {
                 i++;
-                file << tokens[i].value << endl;
+                file << tokens[i].value << " ;       Include nasm instruction" << endl;
             }
         }
         if (tokens[i].type == tType::Exip) {
             i++;
             if (tokens[i].type == tType::Id) {
                 use_gcc(tokens[i].value);
-                file << "extern " << tokens[i].value << endl;
+                file << "extern " << tokens[i].value << " ;      import c/c++ functions" << endl;
                 gcc = true;
             }
             else if (tokens[i].type == tType::String) {
@@ -87,7 +89,7 @@ void to_asm(vector<Token> tokens, string na_s) {
                     << ": In tge eip statement was used string. Use the id, example : exip printf\n";
                 warnings++;
                 use_gcc(tokens[i].value);
-                file << "extern " << tokens[i].value << endl;
+                file << "extern " << tokens[i].value  << " ;      import c/c++ functions"<< endl;
                 gcc = true;
             }
             else {
@@ -110,7 +112,7 @@ void to_asm(vector<Token> tokens, string na_s) {
                     while (tokens[i].type != tType::LBrace) {
                         if (tokens[i].type == tType::Retu) {
                             i++;
-                            file << "   mov rax, 60" << endl;
+                            file << "   mov rax, 60" << " ;        Exit program instruction" << endl;
                             if (tokens[i].type == tType::Number) {
                                 file << "   mov rdi, " + tokens[i].value << endl;
                             } else if (tokens[i].type == tType::Id && tokens[i].value == "c") {
@@ -139,7 +141,7 @@ void to_asm(vector<Token> tokens, string na_s) {
                                                 }
                                             }
 
-                                            bu_val += "\n";
+                                            bu_val += " ;       Output at inline vars\n";
 
                                         } else {
                                             i--;
@@ -175,7 +177,7 @@ void to_asm(vector<Token> tokens, string na_s) {
                             }
                         } else if (tokens[i].type == tType::Out) {
                             i++;
-                            file << "   mov rax, 1" << endl;
+                            file << "   mov rax, 1" << " ;      Output text in variable" << endl;
                             file << "   mov rdi, 1" << endl;
                             file << "   mov rsi, " << tokens[i].value << endl;
                             i++;
@@ -190,23 +192,26 @@ void to_asm(vector<Token> tokens, string na_s) {
                             i++;
                             if (tokens[i].type == tType::Comma) {
                                 i++;
-                                file << ", " << tokens[i].value << endl;
+                                file << ", " << tokens[i].value << " ;             Srv vars" << endl;
+                            }
+                            else {
+                                errors++;
                             }
                         } else if (tokens[i].type == tType::Equals) {
                             i++;
-                            file << "   je " << tokens[i].value << endl;
+                            file << "   je " << tokens[i].value << " ;            Equals instruction" << endl;
                         } else if (tokens[i].type == tType::Run) {
                             i++;
-                            file << "   call " << tokens[i].value << endl;
+                            file << "   call " << tokens[i].value << " ;            Call function" << endl;
                         } else if (tokens[i].type == tType::Push) {
                             i++;
-                            file << "   push " << tokens[i].value << endl;
+                            file << "   push " << tokens[i].value << " ;            Push to stack" << endl;
                         } else if (tokens[i].type == tType::Pop) {
                             i++;
-                            file << "   pop " << tokens[i].value << endl;
+                            file << "   pop " << tokens[i].value << " ;             pop into the stack" << endl;
                         } else if (tokens[i].type == tType::Goto) {
                             i++;
-                            file << "   jmp " << tokens[i].value << endl;
+                            file << "   jmp " << tokens[i].value << " ;             Jump to method" << endl;
                         } else if (tokens[i].type == tType::Or) {
                             i++;
                             file << "   or " << tokens[i].value;
@@ -446,7 +451,7 @@ void to_asm(vector<Token> tokens, string na_s) {
                             }
                         }
                     }
-
+                    file << endl;
                 }
             } else {
                 file << tokens[i].value;
@@ -503,8 +508,7 @@ void to_asm(vector<Token> tokens, string na_s) {
                                                     i++;
                                                 }
                                             }
-                                            bu_val += "\n";
-                                            i++;
+                                            bu_val += " ;       Output at inline vars\n";
                                         } else {
                                             bu_val += "\n";
                                         }
@@ -750,14 +754,18 @@ void to_asm(vector<Token> tokens, string na_s) {
                             }
 
 
-                            continue;
-                        }
-                    }
+                    file << endl;
+                    continue;
+                }
+
+            }
 
                 }
 
             }
-        file << "section .data\n";
+        if (vars.size() != 0) {
+            file << "section .data\n";
+        }
         for (int i = 0; i < vars.size(); ++i) {
             file << vars[i].name << vars[i].value << endl;
         }
