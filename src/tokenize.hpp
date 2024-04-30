@@ -8,10 +8,10 @@ enum tType {
     Number, String,
     Main, Id,
     Entr_p, Retu, Out, Goto, Move, Syscall, Add, Sub, RMulv, Mulv, Equals, Cmp, Run, Nr, R, Loop, NLoop, LoopNe,
-    Outau, Pop, Push, Copy, Not, Negat, Or, Xor, And,
+    Outau, Pop, Push, Copy, Not, Negat, Or, Xor, And, Step, Left, Right, Moveq, Cvtsd2si,
     Include, Define, // preprocessor
     Nasm, // all nasm instructions 
-    Colon, Comma, EqualsLiteral,
+    Colon, Comma, EqualsLiteral, Wave,
     RBrace, LBrace,
 };
 
@@ -25,6 +25,9 @@ vector<Token> lex(string str){
 	vector<Token> tokens;
 	string out;
 	for (int i = 0; i < str.length(); ++i) {
+        if (str[i] == ' ') {
+            continue;
+        }
         if (str[i] == ';') {
             while (str[i] != '\n') {
                 i++;
@@ -39,9 +42,9 @@ vector<Token> lex(string str){
                 }
             }
         }
-		else if (isalpha(str[i]) || str[i] == '_' || str[i] == '#' || str[i] == '[') {
+		else if (isalpha(str[i]) || str[i] == '_' || str[i] == '#') {
                         string buf;
-                        while (isalnum(str[i]) || str[i] == '.' || str[i] == '_' || str[i] == '#' || str[i] == ']' || str[i] == '[') {
+                        while (isalnum(str[i]) || str[i] == '.' || str[i] == '_' || str[i] == '#') {
                                 buf += str[i];
                                 i++;
                         }
@@ -57,6 +60,18 @@ vector<Token> lex(string str){
                         else if (buf == "nasm")
                         {
                             tokens.push_back({tType::Nasm, buf});
+                        }
+                        else if (buf == "step")
+                        {
+                            tokens.push_back({tType::Step, buf});
+                        }
+                        else if (buf == "left")
+                        {
+                            tokens.push_back({tType::Left, buf});
+                        }
+                        else if (buf == "right")
+                        {
+                            tokens.push_back({tType::Right, buf});
                         }
                         else if (buf == "copy")
                         {
@@ -86,6 +101,16 @@ vector<Token> lex(string str){
                         {
                             tokens.push_back({tType::Not, buf});
                         }
+
+                        else if (buf == "cvtsd2si")
+                        {
+                            tokens.push_back({tType::Cvtsd2si, buf});
+                        }
+                        else if (buf == "moveq")
+                        {
+                            tokens.push_back({tType::Moveq, buf});
+                        }
+
                         else if (buf == "negat")
                         {
                             tokens.push_back({tType::Negat, buf});
@@ -174,7 +199,7 @@ vector<Token> lex(string str){
         }
         else if (isdigit(str[i])) {
                         string buf;
-                        while (isalnum(str[i])) {
+                        while (isalnum(str[i]) || str[i] == '.') {
                                 buf += str[i];
                                 i++;
                         }
@@ -183,6 +208,9 @@ vector<Token> lex(string str){
         }
         else if (str[i] == '}') {
                         tokens.push_back({tType::LBrace, "}"});
+                }
+        else if (str[i] == '~') {
+            tokens.push_back({tType::Wave, "~"});
                 }
         else if (str[i] == '{') {
                         tokens.push_back({tType::RBrace, "{"});
@@ -212,6 +240,16 @@ vector<Token> lex(string str){
                         // i -= 1;
                         tokens.push_back({tType::String, buf});
                 }
+        else if (str[i] == '[') {
+            string buf;
+            while (str[i] != ']') {
+                buf += str[i];
+                i++;
+            }
+            buf += str[i];
+            // i -= 1;
+            tokens.push_back({tType::Id, buf});
+        }
 		else {
 		continue;}
 

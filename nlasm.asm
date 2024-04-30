@@ -1,7 +1,8 @@
 entr_p _start
-#include "std.asm"
+#include "libs/stdlib.asm"
+;;#include "libs/math.asm"
+_start {
+    out __hello__ <- [__hello__L]
+    retu 0
+}
 
-nasm = "_start:"
-nasm = "    mov rax, 60"
-nasm = "    mov rdi, 0"
-nasm = "    syscall"
