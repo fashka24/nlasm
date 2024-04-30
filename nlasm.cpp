@@ -54,7 +54,7 @@ int main(int argc, char ** argv) {
     if (argr == "-R") {
         run_asm(output_file);
     }
-    else if (argr == "-B" || argr == "-BD" || argr == "-BDa") {
+    else if (argr == "-B" || argr == "-BD" || argr == "-BDa") { // s
         cout << "Build " << termcolor::bright_green << "finished" << termcolor::reset << ".\n";
     }
     return 0; // retu 0 // send "Hello world~!!"
