@@ -1,6 +1,6 @@
 entr_p _start
 
-; #include "libs/stdlib.asm"
+#include "libs/stdlib.asm"
 
 _start {
     ; creating variable test

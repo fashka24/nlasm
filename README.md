@@ -1,8 +1,12 @@
 # NLasm
 
-### NLasm is new line asambler
+### NLasm is native lite assembler
 
 - Have gooder output and syntax
+- Dependencies: nlasm (compiler), nasm (not necessary: gcc)
+
+### to start recomile all project :
+    clang++/c++/g++ nlasm.cpp -o nlasm
 
 ## example/hello.asm :
     entr_p _start

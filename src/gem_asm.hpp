@@ -45,7 +45,6 @@ void to_asm(vector<Token> tokens, string na_s) {
     file2.close();
     fstream file(na_s, ios_base::app);
     file.clear();
-    int y = 0;
     string main;
     vector<variable> vars;
     for (int i = 0; i < tokens.size(); i++) {

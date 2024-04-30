@@ -9,6 +9,7 @@ using namespace std;
 bool gcc = false;
 int warnings = 0;
 int errors = 0;
+int y = 0;
 
 #include "termcolor.hpp"
 #include "src/tokenize.hpp"

@@ -21,7 +21,17 @@ void build_asm_with_delX(string ar) {
     string ld = "ld -o " + ar + " asm.o", run = "./"+ar;
     string gcc_s = "gcc asm.o -static -o " + ar;
     system("nasm -f elf64 asm.asm -o asm.o");
-    system("rm asm.asm");
+    if (y == 0) {
+        system("rm asm.asm");
+    }
+    else {
+        system("rm asm.asm");
+        for (int i = 0; i < y; ++i) {
+            string del = "rm asm" + to_string(i) + ".asm";
+            system(del.c_str());
+        }
+    }
+
     if (!gcc) {
         system(ld.c_str()); // default ld
         system("rm asm.o");
