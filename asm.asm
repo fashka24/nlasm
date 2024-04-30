@@ -9,6 +9,6 @@ _start:            ; FUNCTION
    mov rax, 60
    mov rdi, 0
    syscall
-section .text
+section .data
 test: db "Hello", 10
 

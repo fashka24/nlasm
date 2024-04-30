@@ -1,1 +1,0 @@
-entr_p { retu 0 } 

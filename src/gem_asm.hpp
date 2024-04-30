@@ -758,7 +758,7 @@ void to_asm(vector<Token> tokens, string na_s) {
                 }
 
             }
-        file << "section .text\n";
+        file << "section .data\n";
         for (int i = 0; i < vars.size(); ++i) {
             file << vars[i].name << vars[i].value << endl;
         }

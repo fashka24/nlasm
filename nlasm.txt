@@ -1,2 +1,0 @@
-Compilation finished at 4.30 15:52:34 in 226 milliseconds. With 0 warnings and 0 errors.
-0
